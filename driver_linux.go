@@ -74,14 +74,14 @@ func alsaError(err C.int) error {
 	return fmt.Errorf("oto: ALSA error: %s", C.GoString(C.snd_strerror(err)))
 }
 
-func newDriver(sampleRate, numChans, bitDepthInBytes, bufferSizeInBytes int) (*driver, error) {
+func newDriver(device string, sampleRate, numChans, bitDepthInBytes, bufferSizeInBytes int) (*driver, error) {
 	p := &driver{
 		numChans:        numChans,
 		bitDepthInBytes: bitDepthInBytes,
 	}
 
 	// open a default ALSA audio device for blocking stream playback
-	if errCode := C.snd_pcm_open(&p.handle, C.CString("default"), C.SND_PCM_STREAM_PLAYBACK, 0); errCode < 0 {
+	if errCode := C.snd_pcm_open(&p.handle, C.CString(device), C.SND_PCM_STREAM_PLAYBACK, 0); errCode < 0 {
 		return nil, alsaError(errCode)
 	}
 

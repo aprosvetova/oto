@@ -128,7 +128,7 @@ func alFormat(channelNum, bitDepthInBytes int) C.ALenum {
 
 const numBufs = 2
 
-func newDriver(sampleRate, channelNum, bitDepthInBytes, bufferSizeInBytes int) (*driver, error) {
+func newDriver(device string, sampleRate, channelNum, bitDepthInBytes, bufferSizeInBytes int) (*driver, error) {
 	name := C.alGetString(C.ALC_DEFAULT_DEVICE_SPECIFIER)
 	d := alDevice(C._alcOpenDevice((*C.ALCchar)(name)))
 	if d == 0 {

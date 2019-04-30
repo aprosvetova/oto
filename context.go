@@ -20,7 +20,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/hajimehoshi/oto/internal/mux"
+	"github.com/aprosvetova/oto/internal/mux"
 )
 
 // Context is the main object in Oto. It interacts with the audio drivers.
@@ -58,7 +58,7 @@ var errClosed = errors.New("closed")
 // of Player's Write calls, thus reducing CPU time. Smaller buffer enables more precise timing. The
 // longest delay between when samples were written and when they started playing is equal to the size
 // of the buffer.
-func NewContext(sampleRate, channelNum, bitDepthInBytes, bufferSizeInBytes int) (*Context, error) {
+func NewContext(device string, sampleRate, channelNum, bitDepthInBytes, bufferSizeInBytes int) (*Context, error) {
 	contextM.Lock()
 	defer contextM.Unlock()
 
@@ -66,7 +66,7 @@ func NewContext(sampleRate, channelNum, bitDepthInBytes, bufferSizeInBytes int) 
 		panic("oto: NewContext can be called only once")
 	}
 
-	d, err := newDriver(sampleRate, channelNum, bitDepthInBytes, bufferSizeInBytes)
+	d, err := newDriver(device, sampleRate, channelNum, bitDepthInBytes, bufferSizeInBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -91,8 +91,8 @@ func NewContext(sampleRate, channelNum, bitDepthInBytes, bufferSizeInBytes int) 
 }
 
 // NewPlayer is a short-hand of creating a Context by NewContext and a Player by the context's NewPlayer.
-func NewPlayer(sampleRate, channelNum, bitDepthInBytes, bufferSizeInBytes int) (*Player, error) {
-	c, err := NewContext(sampleRate, channelNum, bitDepthInBytes, bufferSizeInBytes)
+func NewPlayer(device string, sampleRate, channelNum, bitDepthInBytes, bufferSizeInBytes int) (*Player, error) {
+	c, err := NewContext(device, sampleRate, channelNum, bitDepthInBytes, bufferSizeInBytes)
 	if err != nil {
 		return nil, err
 	}
