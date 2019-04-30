@@ -30,7 +30,7 @@ type Player struct {
 }
 
 func newPlayer(context *Context) *Player {
-	r, w := pipe()
+	r, w := io.Pipe()
 	p := &Player{
 		context: context,
 		r:       r,
